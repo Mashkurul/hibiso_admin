@@ -10,7 +10,7 @@ type NotificationItem = {
   unread: boolean;
 };
 
-export function TopNavbar() {
+export function TopNavbar({ onMenuToggle }: { onMenuToggle?: () => void }) {
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const [notifications, setNotifications] = useState<NotificationItem[]>([
     { id: 1, title: "New creator application submitted", time: "2m ago", unread: true },
@@ -56,9 +56,18 @@ export function TopNavbar() {
   }
 
   return (
-    <header className="sticky top-0 z-20 mb-8 border-b border-black/5 bg-[#efefef]/95 px-5 py-4 backdrop-blur">
+    <header className="sticky top-0 z-20 mb-8 border-b border-black/5 bg-[#efefef]/95 px-4 py-3 backdrop-blur sm:px-5 md:py-4">
       <div className="flex items-center gap-4">
-        <div className="flex h-10 w-[460px] max-w-[52vw] items-center gap-3 rounded-full bg-white/50 px-4 text-slate-400">
+        <button
+          type="button"
+          onClick={onMenuToggle}
+          className="rounded-xl border border-black/10 bg-white/70 p-2.5 text-slate-600 transition hover:bg-white md:hidden"
+          aria-label="Open sidebar menu"
+        >
+          <MenuIcon />
+        </button>
+
+        <div className="flex h-10 min-w-0 flex-1 items-center gap-3 rounded-full bg-white/50 px-4 text-slate-400 md:max-w-[52vw]">
           <SearchIcon />
           <input
             type="text"
@@ -67,7 +76,7 @@ export function TopNavbar() {
           />
         </div>
 
-        <div className="ml-auto flex items-center gap-3.5">
+        <div className="ml-auto flex items-center gap-2 sm:gap-3.5">
           <div className="relative" ref={notificationsRef}>
             <button
               type="button"
@@ -86,7 +95,7 @@ export function TopNavbar() {
             </button>
 
             {isNotificationsOpen && (
-              <div className="absolute right-0 top-14 z-40 w-80 rounded-2xl border border-black/10 bg-white p-3 shadow-xl">
+              <div className="absolute right-0 top-14 z-40 w-[min(20rem,calc(100vw-2rem))] rounded-2xl border border-black/10 bg-white p-3 shadow-xl">
                 <div className="mb-2 flex items-center justify-between px-1">
                   <p className="text-sm font-semibold text-slate-800">Notifications</p>
                   <button
@@ -133,7 +142,7 @@ export function TopNavbar() {
               href="/superadmin/profile"
               className="flex items-center gap-2 rounded-2xl border border-transparent px-2 py-1.5 transition hover:border-black/10 hover:bg-white/50"
             >
-              <div className="text-right">
+              <div className="hidden text-right sm:block">
                 <p className="text-[15px] font-semibold text-slate-800">Sara Jean</p>
                 <p className="text-sm text-slate-500">Admin</p>
               </div>
@@ -153,6 +162,14 @@ function iconWrapper(path: ReactNode) {
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
       {path}
     </svg>
+  );
+}
+
+function MenuIcon() {
+  return iconWrapper(
+    <>
+      <path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" strokeWidth="1.8" />
+    </>,
   );
 }
 

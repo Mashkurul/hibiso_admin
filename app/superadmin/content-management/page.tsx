@@ -293,16 +293,6 @@ function iconWrap(path: React.ReactNode, className?: string) {
   );
 }
 
-function FolderIcon({ className }: { className?: string }) {
-  return iconWrap(
-    <>
-      <path d="M3 7.5A2.5 2.5 0 0 1 5.5 5H10l2 2h6.5A2.5 2.5 0 0 1 21 9.5v7A2.5 2.5 0 0 1 18.5 19h-13A2.5 2.5 0 0 1 3 16.5v-9Z" stroke="currentColor" strokeWidth="1.8" />
-      <path d="M3 10h18" stroke="currentColor" strokeWidth="1.8" />
-    </>,
-    className,
-  );
-}
-
 function PipelineIcon({ className }: { className?: string }) {
   return iconWrap(
     <>

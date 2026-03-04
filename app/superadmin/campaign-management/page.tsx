@@ -450,17 +450,6 @@ function iconWrap(path: React.ReactNode, className?: string) {
   );
 }
 
-function MegaphoneIcon({ className }: { className?: string }) {
-  return iconWrap(
-    <>
-      <path d="M4 13V9l11-4v12L4 13Z" stroke="currentColor" strokeWidth="1.8" />
-      <path d="M15 9h2.5a2.5 2.5 0 0 1 0 5H15" stroke="currentColor" strokeWidth="1.8" />
-      <path d="M6 13.7 7.5 19h2l-1.2-4.7" stroke="currentColor" strokeWidth="1.8" />
-    </>,
-    className,
-  );
-}
-
 function GridIcon({ className }: { className?: string }) {
   return iconWrap(
     <>

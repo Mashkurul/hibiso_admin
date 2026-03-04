@@ -211,7 +211,12 @@ export default function SettingsPage() {
           </section>
 
           <section className="rounded-3xl border border-black/5 bg-white/85 p-5 shadow-[0_14px_34px_rgba(15,23,42,0.08)]">
-            <h2 className="text-xl font-semibold text-slate-800">Save Configuration</h2>
+            <div className="flex items-center justify-between gap-3">
+              <h2 className="text-xl font-semibold text-slate-800">Save Configuration</h2>
+              <span className="rounded-full border border-[#d7e6ff] bg-[#edf4ff] px-2.5 py-1 text-[11px] font-semibold text-[#4f6faa]">
+                Health {configHealth}%
+              </span>
+            </div>
             <p className="mt-2 text-xs text-slate-500">
               Publish changes globally for all admin operations and user-facing behavior.
             </p>

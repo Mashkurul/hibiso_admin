@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
@@ -30,27 +31,24 @@ const navItems: NavItem[] = [
   { href: "/superadmin/settings", label: "Settings", icon: <GearIcon /> },
 ];
 
-export function SuperadminSidebar() {
+export function SuperadminSidebar({ onNavigate }: { onNavigate?: () => void }) {
   const pathname = usePathname();
 
   return (
     <aside className="flex h-screen w-[248px] flex-col border-r border-white/10 bg-[#232221] text-slate-300">
       <div className="px-5 pt-6">
-        <div className="flex items-center gap-2.5">
-          <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-[#ff3f8d] via-[#ff664f] to-[#f5a531]">
-            <LogoMark />
+        <Link href="/superadmin" onClick={onNavigate} className="block">
+          <div className="relative h-16 w-[132px]">
+            <Image src="/hibiso_logo.svg" alt="Hibiso logo" fill className="object-contain object-left" priority />
           </div>
-          <p className="text-[18px] font-semibold leading-none tracking-tight text-white">
-            Hibi&apos;o
-          </p>
-        </div>
+        </Link>
         <p className="mt-8 text-[11px] font-semibold uppercase tracking-[0.11em] text-slate-500">
           Admin Workspace
         </p>
         <div className="mt-3 h-px w-full bg-white/12" />
       </div>
 
-      <nav className="mt-5 flex-1 px-3">
+      <nav className="mt-5 flex-1 overflow-y-auto px-3">
         <ul className="space-y-1.5">
           {navItems.map((item) => {
             const isActive = pathname === item.href;
@@ -58,6 +56,7 @@ export function SuperadminSidebar() {
               <li key={item.href}>
                 <Link
                   href={item.href}
+                  onClick={onNavigate}
                   className={`flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-[15px] font-medium transition ${
                     isActive
                       ? "bg-gradient-to-r from-[#f5a531] to-[#ea6e57] text-white"
@@ -76,26 +75,15 @@ export function SuperadminSidebar() {
       <div className="border-t border-white/10 px-3 py-5">
         <button
           type="button"
+          onClick={onNavigate}
           className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-[15px] text-slate-400 transition hover:bg-white/6 hover:text-white"
         >
           <SignOutIcon />
           <span>Sign Out</span>
         </button>
-        <p className="mt-4 px-3 text-[11px] text-slate-500">Solar Powered Creativity 🌞</p>
+        <p className="mt-4 px-3 text-[11px] text-slate-500">Solar Powered Creativity</p>
       </div>
     </aside>
-  );
-}
-
-function LogoMark() {
-  return (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <circle cx="12" cy="12" r="4" stroke="white" strokeWidth="1.8" />
-      <circle cx="12" cy="5" r="2.5" fill="white" />
-      <circle cx="19" cy="12" r="2.5" fill="white" />
-      <circle cx="12" cy="19" r="2.5" fill="white" />
-      <circle cx="5" cy="12" r="2.5" fill="white" />
-    </svg>
   );
 }
 

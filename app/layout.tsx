@@ -4,6 +4,11 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "hibiso admin",
   description: "This is a admin page",
+  icons: {
+    icon: "/logo.svg",
+    shortcut: "/logo.svg",
+    apple: "/logo.svg",
+  },
 };
 
 export default function RootLayout({
