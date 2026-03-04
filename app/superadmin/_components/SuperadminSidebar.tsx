@@ -38,8 +38,15 @@ export function SuperadminSidebar({ onNavigate }: { onNavigate?: () => void }) {
     <aside className="flex h-screen w-[248px] flex-col border-r border-white/10 bg-[#232221] text-slate-300">
       <div className="px-5 pt-6">
         <Link href="/superadmin" onClick={onNavigate} className="block">
-          <div className="relative h-16 w-[132px]">
-            <Image src="/hibiso_logo.svg" alt="Hibiso logo" fill className="object-contain object-left" priority />
+          <div className="relative h-24 w-[200px]">
+            <Image
+              src="/hibiso_logo.svg"
+              alt="Hibiso logo"
+              fill
+              className="object-contain object-left"
+              sizes="200px"
+              priority
+            />
           </div>
         </Link>
         <p className="mt-8 text-[11px] font-semibold uppercase tracking-[0.11em] text-slate-500">
