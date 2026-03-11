@@ -2,6 +2,12 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import {
+  ADMIN_PROFILE_UPDATED_EVENT,
+  defaultAdminProfile,
+  initialsFromName,
+  readAdminProfile,
+} from "./adminProfileStorage";
 
 type NotificationItem = {
   id: number;
@@ -12,6 +18,7 @@ type NotificationItem = {
 
 export function TopNavbar({ onMenuToggle }: { onMenuToggle?: () => void }) {
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
+  const [adminProfile, setAdminProfile] = useState(defaultAdminProfile);
   const [notifications, setNotifications] = useState<NotificationItem[]>([
     { id: 1, title: "New creator application submitted", time: "2m ago", unread: true },
     { id: 2, title: "3 posts waiting for approval", time: "12m ago", unread: true },
@@ -24,6 +31,21 @@ export function TopNavbar({ onMenuToggle }: { onMenuToggle?: () => void }) {
     () => notifications.filter((item) => item.unread).length,
     [notifications],
   );
+
+  useEffect(() => {
+    function syncAdminProfile() {
+      setAdminProfile(readAdminProfile());
+    }
+
+    syncAdminProfile();
+    window.addEventListener("storage", syncAdminProfile);
+    window.addEventListener(ADMIN_PROFILE_UPDATED_EVENT, syncAdminProfile);
+
+    return () => {
+      window.removeEventListener("storage", syncAdminProfile);
+      window.removeEventListener(ADMIN_PROFILE_UPDATED_EVENT, syncAdminProfile);
+    };
+  }, []);
 
   useEffect(() => {
     function handleOutsideClick(event: MouseEvent) {
@@ -143,11 +165,20 @@ export function TopNavbar({ onMenuToggle }: { onMenuToggle?: () => void }) {
               className="flex items-center gap-2 rounded-2xl border border-transparent px-2 py-1.5 transition hover:border-black/10 hover:bg-white/50"
             >
               <div className="hidden text-right sm:block">
-                <p className="text-[15px] font-semibold text-slate-800">Sara Jean</p>
+                <p className="text-[15px] font-semibold text-slate-800">{adminProfile.name}</p>
                 <p className="text-sm text-slate-500">Admin</p>
               </div>
-              <div className="flex h-11 w-11 items-center justify-center rounded-full bg-gradient-to-br from-[#5071ff] to-[#5ec7ff] text-sm font-semibold text-white">
-                SA
+              <div className="flex h-11 w-11 items-center justify-center overflow-hidden rounded-full bg-gradient-to-br from-[#5071ff] to-[#5ec7ff] text-sm font-semibold text-white">
+                {adminProfile.avatarUrl ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={adminProfile.avatarUrl}
+                    alt={adminProfile.name}
+                    className="h-full w-full object-cover"
+                  />
+                ) : (
+                  initialsFromName(adminProfile.name)
+                )}
               </div>
             </Link>
           </div>

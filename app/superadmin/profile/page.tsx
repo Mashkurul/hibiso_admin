@@ -1,24 +1,56 @@
 "use client";
 
 import { useState } from "react";
+import {
+  defaultAdminProfile,
+  readAdminProfile,
+  writeAdminProfile,
+} from "../_components/adminProfileStorage";
 
 export default function AdminProfilePage() {
-  const [name, setName] = useState("Sara Jean");
-  const [role, setRole] = useState("Super Admin");
-  const [email, setEmail] = useState("sara.jean@hibiadmin.com");
-  const [phone, setPhone] = useState("+880 17 0000 0000");
-  const [bio, setBio] = useState("Leads admin operations, moderation policy, and growth analytics.");
-  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+  const [initialProfile] = useState(() => readAdminProfile());
+  const [name, setName] = useState(initialProfile.name);
+  const [role, setRole] = useState(initialProfile.role);
+  const [email, setEmail] = useState(initialProfile.email);
+  const [phone, setPhone] = useState(initialProfile.phone);
+  const [bio, setBio] = useState(initialProfile.bio);
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(initialProfile.avatarUrl);
   const [notice, setNotice] = useState("");
+
+  function persistProfile(nextAvatarUrl: string | null = avatarUrl) {
+    writeAdminProfile({
+      name,
+      role,
+      email,
+      phone,
+      bio,
+      avatarUrl: nextAvatarUrl,
+    });
+  }
 
   function onPickAvatar(event: React.ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
     if (!file) return;
-    setAvatarUrl(URL.createObjectURL(file));
-    setNotice("");
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      const nextAvatarUrl = typeof reader.result === "string" ? reader.result : null;
+      setAvatarUrl(nextAvatarUrl);
+      writeAdminProfile({
+        name,
+        role,
+        email,
+        phone,
+        bio,
+        avatarUrl: nextAvatarUrl,
+      });
+      setNotice("");
+    };
+    reader.readAsDataURL(file);
   }
 
   function saveProfile() {
+    persistProfile();
     setNotice("Profile updated successfully.");
   }
 
@@ -115,12 +147,13 @@ export default function AdminProfilePage() {
             <button
               type="button"
               onClick={() => {
-                setName("Sara Jean");
-                setRole("Super Admin");
-                setEmail("sara.jean@hibiadmin.com");
-                setPhone("+880 17 0000 0000");
-                setBio("Leads admin operations, moderation policy, and growth analytics.");
+                setName(defaultAdminProfile.name);
+                setRole(defaultAdminProfile.role);
+                setEmail(defaultAdminProfile.email);
+                setPhone(defaultAdminProfile.phone);
+                setBio(defaultAdminProfile.bio);
                 setAvatarUrl(null);
+                writeAdminProfile(defaultAdminProfile);
                 setNotice("Profile reset to defaults.");
               }}
               className="rounded-xl border border-slate-200 bg-white px-4 py-2 text-xs font-medium text-slate-600 transition hover:bg-slate-50"

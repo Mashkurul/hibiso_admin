@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { createPortal } from "react-dom";
 
 type RevenuePoint = {
   month: string;
@@ -267,8 +268,86 @@ export default function RevenuePage() {
     URL.revokeObjectURL(fileUrl);
   }
 
+  const reportModal =
+    selectedReportRow && typeof window !== "undefined"
+      ? createPortal(
+          <div
+            className="fixed inset-0 z-[60] flex items-start justify-center overflow-y-auto bg-black/40 p-4 pt-24 md:items-center md:p-4 md:pt-4"
+            onClick={() => setReportRowId(null)}
+          >
+            <div
+              className="w-full max-w-2xl rounded-2xl bg-white p-5 shadow-2xl"
+              onClick={(event) => event.stopPropagation()}
+            >
+              <div className="mb-4 flex items-center justify-between">
+                <div>
+                  <h3 className="text-lg font-semibold text-slate-800">Campaign Report</h3>
+                  <p className="text-xs text-slate-500">Report ID: {selectedReportRow.id}</p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setReportRowId(null)}
+                  className="inline-flex items-center gap-1 rounded-lg px-2 py-1 text-slate-500 transition hover:bg-slate-100"
+                >
+                  <CloseIcon />
+                  Close
+                </button>
+              </div>
+
+              <div className="grid gap-3 rounded-xl border border-black/5 bg-[#f8f9fb] p-4 text-sm md:grid-cols-2">
+                <ReportLine label="Campaign" value={selectedReportRow.campaign} />
+                <ReportLine
+                  label="Source"
+                  value={`${selectedReportRow.source} (${selectedReportRow.sourceType})`}
+                />
+                <ReportLine label="Gross Amount" value={currency(selectedReportRow.gross)} />
+                <ReportLine label="Commission Rate" value={`${selectedReportRow.rate}%`} />
+                <ReportLine label="Commission" value={currency(selectedReportRow.commission)} />
+                <ReportLine label="Status" value={selectedReportRow.status} />
+              </div>
+
+              <div className="mt-4 rounded-xl border border-black/5 bg-white p-4">
+                <p className="text-sm font-semibold text-slate-800">Campaign Insight</p>
+                <p className="mt-2 text-sm text-slate-600">
+                  This campaign generated a gross billing of{" "}
+                  <span className="font-semibold text-slate-800">
+                    {currency(selectedReportRow.gross)}
+                  </span>{" "}
+                  with a platform commission of{" "}
+                  <span className="font-semibold text-[#2f7ef7]">
+                    {currency(selectedReportRow.commission)}
+                  </span>
+                  . The configured commission rate is{" "}
+                  <span className="font-semibold text-slate-800">{selectedReportRow.rate}%</span>.
+                </p>
+              </div>
+
+              <div className="mt-5 flex justify-end gap-2">
+                <button
+                  type="button"
+                  onClick={() => setReportRowId(null)}
+                  className="rounded-lg border border-slate-200 px-3 py-1.5 text-xs font-medium text-slate-600"
+                >
+                  Close
+                </button>
+                <button
+                  type="button"
+                  onClick={() => downloadCampaignReport(selectedReportRow)}
+                  className="inline-flex items-center gap-1.5 rounded-lg bg-[#2f7ef7] px-3 py-1.5 text-xs font-semibold text-white"
+                >
+                  <DownloadIcon />
+                  Download Report
+                </button>
+              </div>
+            </div>
+          </div>,
+          document.body,
+        )
+      : null;
+
   return (
-    <div className="space-y-5 rounded-3xl bg-[#f1f0ee] p-5 md:p-6">
+    <>
+      <div className="space-y-5 rounded-3xl bg-[#f1f0ee] p-5 md:p-6">
 
 
       <section className="grid gap-4 md:grid-cols-3">
@@ -556,80 +635,10 @@ export default function RevenuePage() {
             </tbody>
           </table>
         </div>
-        {selectedReportRow && (
-          <div
-            className="fixed inset-0 z-[60] flex items-start justify-center overflow-y-auto bg-black/40 p-4 pt-24 md:absolute md:inset-0 md:z-20 md:items-center md:overflow-visible md:rounded-3xl md:p-4 md:pt-4"
-            onClick={() => setReportRowId(null)}
-          >
-            <div
-              className="w-full max-w-2xl rounded-2xl bg-white p-5 shadow-2xl"
-              onClick={(event) => event.stopPropagation()}
-            >
-              <div className="mb-4 flex items-center justify-between">
-                <div>
-                  <h3 className="text-lg font-semibold text-slate-800">Campaign Report</h3>
-                  <p className="text-xs text-slate-500">Report ID: {selectedReportRow.id}</p>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => setReportRowId(null)}
-                  className="inline-flex items-center gap-1 rounded-lg px-2 py-1 text-slate-500 transition hover:bg-slate-100"
-                >
-                  <CloseIcon />
-                  Close
-                </button>
-              </div>
-
-              <div className="grid gap-3 rounded-xl border border-black/5 bg-[#f8f9fb] p-4 text-sm md:grid-cols-2">
-                <ReportLine label="Campaign" value={selectedReportRow.campaign} />
-                <ReportLine
-                  label="Source"
-                  value={`${selectedReportRow.source} (${selectedReportRow.sourceType})`}
-                />
-                <ReportLine label="Gross Amount" value={currency(selectedReportRow.gross)} />
-                <ReportLine label="Commission Rate" value={`${selectedReportRow.rate}%`} />
-                <ReportLine label="Commission" value={currency(selectedReportRow.commission)} />
-                <ReportLine label="Status" value={selectedReportRow.status} />
-              </div>
-
-              <div className="mt-4 rounded-xl border border-black/5 bg-white p-4">
-                <p className="text-sm font-semibold text-slate-800">Campaign Insight</p>
-                <p className="mt-2 text-sm text-slate-600">
-                  This campaign generated a gross billing of{" "}
-                  <span className="font-semibold text-slate-800">
-                    {currency(selectedReportRow.gross)}
-                  </span>{" "}
-                  with a platform commission of{" "}
-                  <span className="font-semibold text-[#2f7ef7]">
-                    {currency(selectedReportRow.commission)}
-                  </span>
-                  . The configured commission rate is{" "}
-                  <span className="font-semibold text-slate-800">{selectedReportRow.rate}%</span>.
-                </p>
-              </div>
-
-              <div className="mt-5 flex justify-end gap-2">
-                <button
-                  type="button"
-                  onClick={() => setReportRowId(null)}
-                  className="rounded-lg border border-slate-200 px-3 py-1.5 text-xs font-medium text-slate-600"
-                >
-                  Close
-                </button>
-                <button
-                  type="button"
-                  onClick={() => downloadCampaignReport(selectedReportRow)}
-                  className="inline-flex items-center gap-1.5 rounded-lg bg-[#2f7ef7] px-3 py-1.5 text-xs font-semibold text-white"
-                >
-                  <DownloadIcon />
-                  Download Report
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
       </section>
-    </div>
+      </div>
+      {reportModal}
+    </>
   );
 }
 
