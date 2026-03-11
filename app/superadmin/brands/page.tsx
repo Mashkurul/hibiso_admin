@@ -1,6 +1,7 @@
 ﻿"use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import { StyledDropdown } from "../_components/StyledDropdown";
 
 type BrandStatus = "Active" | "Deactive";
 type BrandPlan = "Starter" | "Growth" | "Pro" | "Enterprise";
@@ -85,6 +86,13 @@ const initialBrands: Brand[] = [
     initials: "UF",
     accent: "from-[#928cff] to-[#c296ff]",
   },
+];
+
+const brandPlanOptions = [
+  { label: "Starter", value: "Starter" },
+  { label: "Growth", value: "Growth" },
+  { label: "Pro", value: "Pro" },
+  { label: "Enterprise", value: "Enterprise" },
 ];
 
 export default function BrandsPage() {
@@ -412,16 +420,13 @@ export default function BrandsPage() {
       {editPlanBrand && (
         <ModalFrame onClose={() => setEditPlanBrandId(null)} title="Edit Plan">
           <p className="text-sm text-slate-600">Update plan for <span className="font-semibold text-slate-800">{editPlanBrand.name}</span></p>
-          <select
+          <StyledDropdown
             value={draftPlan}
-            onChange={(e) => setDraftPlan(e.target.value as BrandPlan)}
-            className="mt-3 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700 outline-none"
-          >
-            <option>Starter</option>
-            <option>Growth</option>
-            <option>Pro</option>
-            <option>Enterprise</option>
-          </select>
+            options={brandPlanOptions}
+            onChange={(value) => setDraftPlan(value as BrandPlan)}
+            ariaLabel="Select brand plan"
+            className="mt-3 w-full"
+          />
 
           <div className="mt-4 flex justify-end gap-2">
             <button

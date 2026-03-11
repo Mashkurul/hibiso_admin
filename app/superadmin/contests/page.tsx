@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { StyledDropdown } from "../_components/StyledDropdown";
 
 type SubmissionState = "Submitted" | "Under Review" | "Shortlisted" | "Rejected" | "Winner";
 
@@ -78,6 +79,9 @@ const states: SubmissionState[] = [
   "Winner",
   "Rejected",
 ];
+
+const campaignOptions = (campaigns: string[]) =>
+  campaigns.map((campaign) => ({ label: campaign, value: campaign }));
 
 export default function ContestsPage() {
   const [submissions, setSubmissions] = useState<Submission[]>(initialSubmissions);
@@ -233,15 +237,13 @@ export default function ContestsPage() {
           </h2>
           <div className="flex items-center gap-2">
             <span className="text-xs font-medium text-slate-500">Campaign:</span>
-            <select
+            <StyledDropdown
               value={campaignFilter}
-              onChange={(e) => setCampaignFilter(e.target.value)}
-              className="rounded-lg border border-slate-200 bg-white px-2 py-1.5 text-xs text-slate-700 outline-none"
-            >
-              {campaigns.map((campaign) => (
-                <option key={campaign}>{campaign}</option>
-              ))}
-            </select>
+              options={campaignOptions(campaigns)}
+              onChange={setCampaignFilter}
+              ariaLabel="Filter by campaign"
+              className="w-[210px]"
+            />
           </div>
         </div>
 

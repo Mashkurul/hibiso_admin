@@ -558,7 +558,7 @@ export default function RevenuePage() {
         </div>
         {selectedReportRow && (
           <div
-            className="absolute inset-0 z-20 flex items-center justify-center rounded-3xl bg-black/40 p-4"
+            className="fixed inset-0 z-[60] flex items-start justify-center overflow-y-auto bg-black/40 p-4 pt-24 md:absolute md:inset-0 md:z-20 md:items-center md:overflow-visible md:rounded-3xl md:p-4 md:pt-4"
             onClick={() => setReportRowId(null)}
           >
             <div

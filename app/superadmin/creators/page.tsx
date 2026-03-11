@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import { StyledDropdown } from "../_components/StyledDropdown";
 
 type CreatorStatus = "Active" | "Suspended";
 type CreatorPlan = "Basic" | "Pro" | "Elite" | "Agency";
@@ -85,6 +86,13 @@ const initialCreators: Creator[] = [
     initials: "JK",
     accent: "from-[#928cff] to-[#c296ff]",
   },
+];
+
+const creatorPlanOptions = [
+  { label: "Basic", value: "Basic" },
+  { label: "Pro", value: "Pro" },
+  { label: "Elite", value: "Elite" },
+  { label: "Agency", value: "Agency" },
 ];
 
 export default function CreatorsPage() {
@@ -421,16 +429,13 @@ export default function CreatorsPage() {
           <p className="text-sm text-slate-600">
             Update plan for <span className="font-semibold text-slate-800">{editPlanCreator.name}</span>
           </p>
-          <select
+          <StyledDropdown
             value={draftPlan}
-            onChange={(e) => setDraftPlan(e.target.value as CreatorPlan)}
-            className="mt-3 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700 outline-none"
-          >
-            <option>Basic</option>
-            <option>Pro</option>
-            <option>Elite</option>
-            <option>Agency</option>
-          </select>
+            options={creatorPlanOptions}
+            onChange={(value) => setDraftPlan(value as CreatorPlan)}
+            ariaLabel="Select creator plan"
+            className="mt-3 w-full"
+          />
 
           <div className="mt-4 flex justify-end gap-2">
             <button

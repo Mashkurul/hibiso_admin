@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { StyledDropdown } from "../_components/StyledDropdown";
 
 type Region = "Europe" | "North America" | "Asia";
 type ModerationMode = "Balanced" | "Strict" | "Custom";
@@ -37,6 +38,30 @@ const defaultSettings: SettingsState = {
 
 const fieldClass =
   "mt-1.5 w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-700 outline-none transition focus:border-[#88a8e8] focus:ring-2 focus:ring-[#dbe8ff]";
+
+const timezoneOptions = [
+  { label: "UTC+06:00 (Asia/Dhaka)", value: "UTC+06:00 (Asia/Dhaka)" },
+  { label: "UTC+01:00 (Europe/Berlin)", value: "UTC+01:00 (Europe/Berlin)" },
+  { label: "UTC+00:00 (Europe/London)", value: "UTC+00:00 (Europe/London)" },
+  { label: "UTC-05:00 (America/New_York)", value: "UTC-05:00 (America/New_York)" },
+];
+
+const currencyOptions = [
+  { label: "EUR", value: "EUR" },
+  { label: "USD", value: "USD" },
+];
+
+const regionOptions = [
+  { label: "Europe", value: "Europe" },
+  { label: "North America", value: "North America" },
+  { label: "Asia", value: "Asia" },
+];
+
+const moderationOptions = [
+  { label: "Balanced", value: "Balanced" },
+  { label: "Strict", value: "Strict" },
+  { label: "Custom", value: "Custom" },
+];
 
 export default function SettingsPage() {
   const [settings, setSettings] = useState<SettingsState>(defaultSettings);
@@ -89,39 +114,33 @@ export default function SettingsPage() {
               </label>
               <label className="text-sm text-slate-600">
                 Timezone
-                <select
+                <StyledDropdown
                   value={settings.timezone}
-                  onChange={(e) => patch({ timezone: e.target.value })}
-                  className={fieldClass}
-                >
-                  <option>UTC+06:00 (Asia/Dhaka)</option>
-                  <option>UTC+01:00 (Europe/Berlin)</option>
-                  <option>UTC+00:00 (Europe/London)</option>
-                  <option>UTC-05:00 (America/New_York)</option>
-                </select>
+                  options={timezoneOptions}
+                  onChange={(value) => patch({ timezone: value })}
+                  ariaLabel="Select timezone"
+                  className="mt-1.5 w-full"
+                />
               </label>
               <label className="text-sm text-slate-600">
                 Default Currency
-                <select
+                <StyledDropdown
                   value={settings.defaultCurrency}
-                  onChange={(e) => patch({ defaultCurrency: e.target.value as "EUR" | "USD" })}
-                  className={fieldClass}
-                >
-                  <option>EUR</option>
-                  <option>USD</option>
-                </select>
+                  options={currencyOptions}
+                  onChange={(value) => patch({ defaultCurrency: value as "EUR" | "USD" })}
+                  ariaLabel="Select currency"
+                  className="mt-1.5 w-full"
+                />
               </label>
               <label className="text-sm text-slate-600">
                 Active Region
-                <select
+                <StyledDropdown
                   value={settings.activeRegion}
-                  onChange={(e) => patch({ activeRegion: e.target.value as Region })}
-                  className={fieldClass}
-                >
-                  <option>Europe</option>
-                  <option>North America</option>
-                  <option>Asia</option>
-                </select>
+                  options={regionOptions}
+                  onChange={(value) => patch({ activeRegion: value as Region })}
+                  ariaLabel="Select active region"
+                  className="mt-1.5 w-full"
+                />
               </label>
             </div>
           </section>
@@ -134,15 +153,13 @@ export default function SettingsPage() {
             <div className="grid gap-3 md:grid-cols-2">
               <label className="text-sm text-slate-600">
                 Moderation Mode
-                <select
+                <StyledDropdown
                   value={settings.moderationMode}
-                  onChange={(e) => patch({ moderationMode: e.target.value as ModerationMode })}
-                  className={fieldClass}
-                >
-                  <option>Balanced</option>
-                  <option>Strict</option>
-                  <option>Custom</option>
-                </select>
+                  options={moderationOptions}
+                  onChange={(value) => patch({ moderationMode: value as ModerationMode })}
+                  ariaLabel="Select moderation mode"
+                  className="mt-1.5 w-full"
+                />
               </label>
               <label className="text-sm text-slate-600">
                 Max Upload Size (MB)

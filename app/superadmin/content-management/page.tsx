@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { StyledDropdown } from "../_components/StyledDropdown";
 
 type WorkflowStage = "Draft" | "In Review" | "Scheduled" | "Published";
 type PublishState = "Draft" | "Review" | "Scheduled" | "Published" | "Paused";
@@ -61,6 +62,14 @@ const assetItems: AssetItem[] = [
   { id: "AS-206", name: "Glow_Storyboard_v2.pdf", type: "Script", owner: "GlowCo", size: "3.1 MB", updatedAt: "2026-04-06" },
 ];
 
+const channelOptions = [
+  { label: "All", value: "All" },
+  { label: "Instagram", value: "Instagram" },
+  { label: "TikTok", value: "TikTok" },
+  { label: "YouTube", value: "YouTube" },
+  { label: "Facebook", value: "Facebook" },
+];
+
 export default function ContentManagementPage() {
   const [rows, setRows] = useState<PublishRow[]>(publishRows);
   const [channelFilter, setChannelFilter] = useState<Channel | "All">("All");
@@ -117,17 +126,13 @@ export default function ContentManagementPage() {
           </h2>
           <div className="flex items-center gap-2">
             <span className="text-xs font-medium text-slate-500">Channel:</span>
-            <select
+            <StyledDropdown
               value={channelFilter}
-              onChange={(e) => setChannelFilter(e.target.value as Channel | "All")}
-              className="rounded-lg border border-slate-200 bg-white px-2 py-1.5 text-xs text-slate-700 outline-none"
-            >
-              <option>All</option>
-              <option>Instagram</option>
-              <option>TikTok</option>
-              <option>YouTube</option>
-              <option>Facebook</option>
-            </select>
+              options={channelOptions}
+              onChange={(value) => setChannelFilter(value as Channel | "All")}
+              ariaLabel="Filter by channel"
+              className="w-[188px]"
+            />
           </div>
         </div>
 
